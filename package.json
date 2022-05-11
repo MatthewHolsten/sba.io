@@ -1,6 +1,6 @@
 {
-  "homepage": "http://MatthewHolsten.github.io/sba-loan-risk-analysis",
-  "name": "sba-loan-risk-analysis-webapp",
+  "homepage": "http://MatthewHolsten.github.io/sba.io",
+  "name": "sba-loan-front",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
