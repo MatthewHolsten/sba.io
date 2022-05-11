@@ -5,8 +5,8 @@ import useFetch from "react-fetch-hook"
 // import React, {useState, useEffect} from 'react'
 
 const err_msg = "Please enter valid input.";
-const out_0_msg     = "High Risk Loan";
-const out_1_msg     = "Low Risk Loan";
+const out_0_msg     = "High Risk Loan ❌";
+const out_1_msg     = "Low Risk Loan ✅";
 const out_other_msg = "Issue with result.";
 
 
@@ -30,7 +30,7 @@ export default function QueryAPI(props) {
 
     const {isLoading, error, data } = useFetch(props.query_url);
 
-    if (isLoading) return ("Loading...");
+    if (isLoading) return ("Loading... ⏳");
     if (error) return (err_msg);
 
     console.log(data.output)

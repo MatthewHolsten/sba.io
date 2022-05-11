@@ -9,13 +9,13 @@ import * as yup from "yup"
 // import 'mathjs'
 
 const schema = yup.object().shape({
-    loan_amt:       yup.number().required("feature 2 error message"),
-    sba_loan_amt:   yup.number().required("feature 2 error message"),
-    sba_prop:       yup.number().required("feature 2 error message"),
-    term:           yup.number().required("feature 2 error message"),
-    jobs:           yup.number().required("feature 1 error message"),
-    ind_code:       yup.number().required("feature 1 error message"),
-    state:          yup.string().required(),
+    loan_amt:       yup.number().required().min(0),
+    sba_loan_amt:   yup.number().required().min(0),
+    sba_prop:       yup.number().required().max(1).min(0),
+    term:           yup.number().required().min(0),
+    jobs:           yup.number().required().min(0),
+    ind_code:       yup.number().required().min(0),
+    state:          yup.string().required().matches(/(^[A-Z]{2}$)/),
     admin:          yup.string().required(),
     density:        yup.string().required(),
     recession:      yup.bool().required().default(false),
@@ -79,9 +79,9 @@ function Form() {
         const rand_loan_amt     = Math.floor(Math.random() * 1000 + 1) * 1000;
         const rand_sba_prop     = Math.floor(Math.random() * 100) / 100;
         const rand_sba_loan_amt = Math.floor(rand_loan_amt * rand_sba_prop);
-        const rand_term         = Math.floor(Math.random() * (290 - 12)) + 12;
-        const rand_jobs         = Math.floor(Math.random() * (1000 - 10)) + 10;
-        const rand_ind_code     = Math.floor(Math.random() * (10000 - 1000)) + 1000;
+        const rand_term         = Math.floor(Math.random() * (300 - 12)) + 12;
+        const rand_jobs         = Math.floor(Math.random() * (250 - 10)) + 10;
+        const rand_ind_code     = Math.floor(Math.random() * 2000) + 10;
 
         const rand_admin        = {0: 'd', 1: 'r'}[Math.floor(Math.random() * 2)];
         const rand_density      = {0: 'rural', 1: 'urban', 2: 'unknown'}[Math.floor(Math.random() * 3)];
@@ -129,18 +129,18 @@ function Form() {
     return (
         <div className="Form">
             <h2 className="title"> <b>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            SBA Loan Analysis
+            &nbsp;&nbsp;
+            SBA Loan Analysis Tool
             </b></h2>
 
-            <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Matt Holsten, Rob Pitkin
             <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;
             Tufts University, CS-135 Machine Learning
 
             <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Spring 2022
             </h5>
             <br />
@@ -153,67 +153,66 @@ function Form() {
                 <form onSubmit={handleSubmit(onSubmit)}>
 
                     <label>
-                    &nbsp;&nbsp;&nbsp;
-                    Loan Amount
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="text" id="loan_amt" {...register("loan_amt")} placeholder="Feature 1..."/>
+                    &nbsp;
+                    Lender Loan
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="text" id="loan_amt" {...register("loan_amt")} placeholder="U.S. Dollars"/>
                     </label>
                     <br /><br />
 
                     <label>
-                    &nbsp;&nbsp;&nbsp;
-                    SBA Loan Amount
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <input type="text" id="sba_loan_amt" {...register("sba_loan_amt")} placeholder="Feature 2..."/>
+                    &nbsp;
+                    SBA Guarentee
+                    &nbsp;&nbsp;</label>
+                    <input type="text" id="sba_loan_amt" {...register("sba_loan_amt")} placeholder="U.S. Dollars"/>
 
                     <br /><br />
 
 
                     <label>
-                    &nbsp;&nbsp;&nbsp;
-                    SBA Guarenteed Proportion
-                    &nbsp;&nbsp;&nbsp;
-                    <input type="text" id="sba_prop" {...register("sba_prop")} placeholder="Feature 2..."/>
+                    &nbsp;
+                    Guarentee %
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="text" id="sba_prop" {...register("sba_prop")} placeholder="Decimal"/>
                     </label>
                     <br /><br />
 
-                    <label>&nbsp;&nbsp;&nbsp;
+                    <label>&nbsp;
                     Term Length
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="text" id="term" {...register("term")} placeholder="Feature 2..."/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="text" id="term" {...register("term")} placeholder="Months"/>
                     </label>
                     <br /><br />
 
                     <label>
-                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;
                     Jobs Retained
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="text" id="jobs" {...register("jobs")} placeholder="Feature 2..."/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="text" id="jobs" {...register("jobs")} placeholder="Total"/>
                     </label>
                     <br /><br />
 
                     <label>
-                    &nbsp;&nbsp;&nbsp;
-                    Industry Code&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="text" id="ind_code" {...register("ind_code")} placeholder="Feature 2..."/>
+                    &nbsp;
+                    Industry Code&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="text" id="ind_code" {...register("ind_code")} placeholder="ID Number"/>
                     </label>
                     <br /><br />
 
-                    <label>&nbsp;&nbsp;&nbsp;
-                    State (Abbreviation)
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="text" id="state" {...register("state")} placeholder="Feature 2..."/>
+                    <label>&nbsp;
+                    State
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="text" id="state" {...register("state")} placeholder="Abbreviation"/>
                         </label>
                     <br /><br />
 
                     <label>
-                    &nbsp;&nbsp;&nbsp;
-                    Administration Party
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
+                    &nbsp;
+                    Admin. Party
+                    &nbsp; </label>
                         <label>
                         <input type="radio" id="admin_d" {...register("admin")} name="admin" value="d" />
                         Democrat
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </label>
 
                         <label>
@@ -223,69 +222,50 @@ function Form() {
                     <br /><br />
 
                     <label>
-                    &nbsp;&nbsp;&nbsp;
-                    Density
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
+                    &nbsp;
+                    Pop. Density
+                        &nbsp; </label>
                         <label>
                         <input type="radio" id="density_rural" {...register("density")} name="density" value="rural" />
                         Rural
-                        &nbsp;
                         </label>
 
                         <label>
                         <input type="radio" id="density_urban" {...register("density")} name="density" value="urban" />
 
                         Urban
-                        &nbsp;
                         </label>
 
                         <label>
                         <input type="radio" id="density_unknown" {...register("density")} name="density" value="unknown" />
-                        Unknown
+                        NA
                         </label>
                     <br /><br />
 
                     <label>
-                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;
                     Time Period
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
                     </label>
                     <label>
                     <input type="checkbox" id="recession" {...register("recession")} name="recession" value="1"/>
-                    &nbsp;&nbsp;&nbsp;
+
                     Recession
                     </label>
 
                     <br /><br />
 
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;
+
+                    <input type="reset"/>
+
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <button onClick={populateRandom}>Generate Random</button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="submit" id="submit"/>&nbsp;&nbsp;
-                    <br />
 
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="reset"/>
-                    <br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button onClick={populateRandom}>Generate Random</button>&nbsp;&nbsp;
 
 
 
@@ -293,10 +273,11 @@ function Form() {
 
             </div>
             </div>
-            <br />
-            <b>&nbsp;&nbsp;&nbsp;&nbsp;ML Model Prediction:&nbsp;&nbsp; </b>
+            <br /><br />
+            <b>&nbsp;Model Prediction:&nbsp;&nbsp; </b>
             <em><QueryAPI query_url={url}/></em>
-
+            <br /><br /><br /><br />
+            <br /><br /><br /><br />
         </div>
     );
 }
