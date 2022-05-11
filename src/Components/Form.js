@@ -212,7 +212,7 @@ function Form() {
                     &nbsp; </label>
                         <label>
                         <input type="radio" id="admin_d" {...register("admin")} name="admin" value="d" />
-                        Democrat
+                        Democrat&nbsp;
                         </label>
 
                         <label>
@@ -227,13 +227,13 @@ function Form() {
                         &nbsp; </label>
                         <label>
                         <input type="radio" id="density_rural" {...register("density")} name="density" value="rural" />
-                        Rural
+                        Rural&nbsp;
                         </label>
 
                         <label>
                         <input type="radio" id="density_urban" {...register("density")} name="density" value="urban" />
 
-                        Urban
+                        Urban&nbsp;
                         </label>
 
                         <label>
